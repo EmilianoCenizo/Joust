@@ -44,6 +44,28 @@ export default class WeaponArt extends React.Component<EntityProps, {}> {
 			});
 		}
 
+		if (entity.getTag(GameTag.INSPIRE) > 0) {
+			images.push({
+				image: "icon_inspire.png",
+				classes: ["icon-inspire"]
+			});
+		} else if (entity.getTag(GameTag.DEATHRATTLE) > 0) {
+			images.push({
+				image: "icon_deathrattle.png",
+				classes: ["icon-deathrattle"]
+			});
+		} else if (entity.getTag(GameTag.POISONOUS) > 0) {
+			images.push({
+				image: "icon_poisonous.png",
+				classes: ["icon-poisonous"]
+			});
+		} else if (entity.getTag(GameTag.TRIGGER_VISUAL) > 0) {
+			images.push({
+				image: "icon_trigger.png",
+				classes: ["icon-trigger"]
+			});
+		}
+
 		images.push({
 			image: frame,
 			classes: ["hero-weapon-frame"]
