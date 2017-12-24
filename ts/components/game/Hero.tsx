@@ -85,11 +85,10 @@ export default class Hero extends EntityInPlay<HeroProps> {
 		// build title
 		
 		let secretCards = []
-
+		
 		secrets.keySeq().forEach(k => 
 			secretCards.push(
-				<Secret 
-					key={k}
+				<Secret 	
 					text={secretText}
 					title={"secret"}
 					entity={secrets.get(k)}

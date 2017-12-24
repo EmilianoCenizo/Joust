@@ -11,7 +11,7 @@ interface SecretProps extends EntityInPlayProps {
 export default class Secret extends EntityInPlay<SecretProps> {
 	
 	constructor() {
-		super('secret-text');
+		super('secret');
 	}
 	
 	protected jsx() {
@@ -20,7 +20,7 @@ export default class Secret extends EntityInPlay<SecretProps> {
 		];
 
 	if (this.state.isHovering) {
-		components.push(<div key="hover" className="mouse-over">
+		components.push(<div key="hover" className="secret-reveal mouse-over">
 			<Card
 				entity={this.props.entity}
 				assetDirectory={this.props.assetDirectory}
@@ -31,6 +31,6 @@ export default class Secret extends EntityInPlay<SecretProps> {
 				option={null}
 			/></div>);
 		}
-		return components
+	return components
 	}
 }
