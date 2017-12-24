@@ -3,6 +3,7 @@ import * as Immutable from "immutable";
 import EntityInPlay from "./EntityInPlay";
 import {CardOracleProps, EntityInPlayProps} from "../../interfaces";
 import Entity from "../../Entity";
+import Secret from "./Secret";
 import Attack from "./stats/Attack";
 import Damage from "./stats/Damage";
 import Healing from "./stats/Healing";
@@ -19,41 +20,15 @@ interface HeroProps extends EntityInPlayProps, CardOracleProps {
 }
 
 export default class Hero extends EntityInPlay<HeroProps> {
+
+
+
 	constructor() {
 		super('hero');
 	}
 
 	protected jsx() {
 		let entity = this.props.entity;
-
-		let secrets = this.props.secrets;
-		let quests = [];
-
-		let hasQuest = secrets.some((potentialQuest: Entity) => !!potentialQuest.getTag(GameTag.QUEST));
-		let secretCount = secrets.count();
-
-		// build text in icon
-		let secretText = hasQuest ? "!" : (secretCount > 1 ? "" + secretCount : "?");
-
-		// build title
-		let secretTitle = this.props.secrets.reduce((title, entity: Entity): string => {
-			let name = entity.cardId;
-			if (!entity.revealed) {
-				if (this.props.cardOracle && this.props.cardOracle.has(entity.id)) {
-					name = this.props.cardOracle.get(entity.id);
-				}
-				else {
-					return title;
-				}
-			}
-			if (title) {
-				title += ", ";
-			}
-			if (this.props.cards && this.props.cards.has(name)) {
-				name = this.props.cards.get(name).name || name;
-			}
-			return title += name;
-		}, "");
 
 		let damage = 0;
 		let healing = 0;
@@ -90,10 +65,47 @@ export default class Hero extends EntityInPlay<HeroProps> {
 				{entity.getAtk() ? <Attack attack={entity.getAtk()} /> : null}
 				<Health health={entity.getHealth() } damage={entity.getDamage()} />
 				{entity.getArmor() ? <Armor armor={entity.getArmor()} /> : null}
-				{(hasQuest || secretCount > 0) ? <SecretText text={secretText} title={secretTitle} /> : null}
+				{this.renderSecrets()}
 				{damage != 0 ? <Damage damage={damage} /> : null}
 				{healing != 0 ? <Healing healing={healing} /> : null}
 			</div>,
 		];
+	}
+
+	private renderSecrets(){
+
+		let secrets = this.props.secrets;
+		let quests = [];
+
+		let hasQuest = secrets.some((potentialQuest: Entity) => !!potentialQuest.getTag(GameTag.QUEST));
+		let secretCount = secrets.count();
+
+		// build text in icon
+		let secretText = hasQuest ? "!" : (secretCount > 1 ? "" + secretCount : "?");
+		// build title
+		
+		let secretCards = []
+
+		secrets.keySeq().forEach(k => 
+			secretCards.push(
+				<Secret 
+					key={k}
+					text={secretText}
+					title={"secret"}
+					entity={secrets.get(k)}
+					optionCallback={this.props.optionCallback}
+					assetDirectory={this.props.assetDirectory}
+					cardArtDirectory={this.props.cardArtDirectory}
+					cards={this.props.cards}
+					controller={this.props.controller}
+					descriptors={this.props.descriptors}
+					/>
+			));
+		
+		if(hasQuest || secretCount > 0) {
+			return secretCards
+		}  else{
+			return null
+		}
 	}
 }
