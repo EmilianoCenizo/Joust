@@ -168,6 +168,7 @@ export default class Player extends React.Component<PlayerProps, {}> {
 		}
 		let hero = <Hero
 			entity={heroEntity}
+			isTop={this.props.isTop}
 			option={heroEntity ? playOptions.get(heroEntity.id) : null}
 			secrets={this.props.entities.get(Zone.SECRET) || Immutable.Map<number, Entity>() }
 			optionCallback={this.props.optionCallback}

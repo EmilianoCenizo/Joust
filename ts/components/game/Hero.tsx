@@ -17,11 +17,10 @@ import GameStateDescriptor from "../../state/GameStateDescriptor";
 
 interface HeroProps extends EntityInPlayProps, CardOracleProps {
 	secrets: Immutable.Map<number, Entity>;
+	isTop: boolean;
 }
 
 export default class Hero extends EntityInPlay<HeroProps> {
-
-
 
 	constructor() {
 		super('hero');
@@ -75,6 +74,7 @@ export default class Hero extends EntityInPlay<HeroProps> {
 	private renderSecrets(){
 
 		let secrets = this.props.secrets;
+
 		let quests = [];
 
 		let hasQuest = secrets.some((potentialQuest: Entity) => !!potentialQuest.getTag(GameTag.QUEST));
@@ -85,7 +85,9 @@ export default class Hero extends EntityInPlay<HeroProps> {
 		
 		if(hasQuest || secretCount > 0) {
 			return <SecretText 
+			isTop={this.props.isTop}
 			entity={this.props.entity} 
+			cardOracle={this.props.cardOracle}
 			text={secretText} 
 			secrets={secrets}					
 			optionCallback={this.props.optionCallback}
