@@ -82,28 +82,20 @@ export default class Hero extends EntityInPlay<HeroProps> {
 
 		// build text in icon
 		let secretText = hasQuest ? "!" : (secretCount > 1 ? "" + secretCount : "?");
-		// build title
-		
-		let secretCards = []
-		
-		secrets.keySeq().forEach(k => 
-			secretCards.push(
-				<Secret 	
-					text={secretText}
-					title={"secret"}
-					entity={secrets.get(k)}
-					optionCallback={this.props.optionCallback}
-					assetDirectory={this.props.assetDirectory}
-					cardArtDirectory={this.props.cardArtDirectory}
-					cards={this.props.cards}
-					controller={this.props.controller}
-					descriptors={this.props.descriptors}
-					/>
-			));
 		
 		if(hasQuest || secretCount > 0) {
-			return secretCards
-		}  else{
+			return <SecretText 
+			entity={this.props.entity} 
+			text={secretText} 
+			secrets={secrets}					
+			optionCallback={this.props.optionCallback}
+			assetDirectory={this.props.assetDirectory}
+			cardArtDirectory={this.props.cardArtDirectory}
+			cards={this.props.cards}
+			controller={this.props.controller}
+			descriptors={this.props.descriptors}
+			/>
+		}  else {
 			return null
 		}
 	}
