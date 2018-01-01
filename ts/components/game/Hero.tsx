@@ -10,6 +10,7 @@ import Healing from "./stats/Healing";
 import Health from "./stats/Health";
 import Armor from "./stats/Armor";
 import SecretText from "./stats/SecretText";
+import QuestText from "./stats/QuestText";
 import HeroArt from "./visuals/HeroArt";
 import {GameTag, MetaDataType} from "../../enums";
 import MetaData from "../../MetaData";
@@ -64,26 +65,48 @@ export default class Hero extends EntityInPlay<HeroProps> {
 				{entity.getAtk() ? <Attack attack={entity.getAtk()} /> : null}
 				<Health health={entity.getHealth() } damage={entity.getDamage()} />
 				{entity.getArmor() ? <Armor armor={entity.getArmor()} /> : null}
+				{this.renderQuests()}
 				{this.renderSecrets()}
 				{damage != 0 ? <Damage damage={damage} /> : null}
 				{healing != 0 ? <Healing healing={healing} /> : null}
 			</div>,
 		];
 	}
-
-	private renderSecrets(){
-
+	private renderQuests(){
 		let secrets = this.props.secrets;
 
-		let quests = [];
-
-		let hasQuest = secrets.some((potentialQuest: Entity) => !!potentialQuest.getTag(GameTag.QUEST));
+		let quests = secrets.filter((potentialQuest: Entity) => !!potentialQuest.getTag(GameTag.QUEST));
 		let secretCount = secrets.count();
 
 		// build text in icon
-		let secretText = hasQuest ? "!" : (secretCount > 1 ? "" + secretCount : "?");
+		let questText = "!"
 		
-		if(hasQuest || secretCount > 0) {
+		if(quests.size > 0) {
+			return <QuestText 
+			isTop={this.props.isTop}
+			entity={this.props.entity} 
+			cardOracle={this.props.cardOracle}
+			text={questText} 
+			secrets={secrets}					
+			optionCallback={this.props.optionCallback}
+			assetDirectory={this.props.assetDirectory}
+			cardArtDirectory={this.props.cardArtDirectory}
+			cards={this.props.cards}
+			controller={this.props.controller}
+			descriptors={this.props.descriptors}
+			/>
+		}  else {
+			return null
+		}
+	}
+
+	private renderSecrets(){
+		let secrets = this.props.secrets;
+		let filteredSecrets = secrets.filterNot((potentialQuest: Entity) => !!potentialQuest.getTag(GameTag.QUEST));
+		let secretCount = filteredSecrets.size
+		let secretText = secretCount > 1 ? "" + secretCount : "?";
+
+		if(secretCount > 0) {
 			return <SecretText 
 			isTop={this.props.isTop}
 			entity={this.props.entity} 

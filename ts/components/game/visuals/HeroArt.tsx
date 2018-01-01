@@ -13,7 +13,7 @@ export default class HeroArt extends React.Component<HeroArtProps, {}> {
 
 	shouldComponentUpdate(nextProps: HeroArtProps, nextState: {}, nextContext: any): boolean {
 		return (
-			nextProps.entity !== this.props.entity ||
+			nextProps.entity !== this.props.entity ||	
 			nextProps.damage !== this.props.damage ||
 			nextProps.healing !== this.props.healing ||
 			nextProps.controller !== this.props.controller ||
@@ -69,32 +69,58 @@ export default class HeroArt extends React.Component<HeroArtProps, {}> {
 		let hasQuest = this.props.secrets.some((potentialQuest: Entity) => !!potentialQuest.getTag(GameTag.QUEST));
 
 		if (hasQuest) {
+				
 			images.push({
-				image: "quest.png",
-				classes: ["secret"],
+					image: "quest.png",
+					classes: ["quest"],
 			});
-		}
-		else if (this.props.secrets.count() > 0) {
-			let image = "secret_sheathed.png";
-			let secret = this.props.secrets.first();
-			if (!secret.getTag(GameTag.EXHAUSTED)) {
-				switch (secret.getClass()) {
-					case CardClass.HUNTER:
-						image = "secret_hunter.png";
-						break;
-					case CardClass.MAGE:
-						image = "secret_mage.png";
-						break;
-					case CardClass.PALADIN:
-						image = "secret_paladin.png";
-						break;
+
+			//Quest plus one
+			if (this.props.secrets.count() > 1) {
+				let image = "secret_sheathed.png";
+				let secret = this.props.secrets.first();
+				if (!secret.getTag(GameTag.EXHAUSTED)) {
+					switch (secret.getClass()) {
+						case CardClass.HUNTER:
+							image = "secret_hunter.png";
+							break;
+						case CardClass.MAGE:
+							image = "secret_mage.png";
+							break;
+						case CardClass.PALADIN:
+							image = "secret_paladin.png";
+							break;
+					}
 				}
+				images.push({
+					image: image,
+					classes: ["secret side"],
+				});
+
 			}
-			images.push({
-				image: image,
-				classes: ["secret"],
-			});
 		}
+		//No quest 
+		else if (this.props.secrets.count() > 0) {
+				let image = "secret_sheathed.png";
+				let secret = this.props.secrets.first();
+				if (!secret.getTag(GameTag.EXHAUSTED)) {
+					switch (secret.getClass()) {
+						case CardClass.HUNTER:
+							image = "secret_hunter.png";
+							break;
+						case CardClass.MAGE:
+							image = "secret_mage.png";
+							break;
+						case CardClass.PALADIN:
+							image = "secret_paladin.png";
+							break;
+					}
+				}
+				images.push({
+					image: image,
+					classes: ["secret"],
+				});
+			}
 
 		if (entity.getTag(GameTag.HEALTH) - entity.getTag(GameTag.DAMAGE) <= 0 || entity.getTag(GameTag.ZONE) != Zone.PLAY) {
 			images.push({

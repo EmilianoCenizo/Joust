@@ -6,17 +6,16 @@ import SecretText from "./stats/SecretText";
 import * as Immutable from "immutable";
 import Entity from "../../Entity";
 
-interface SecretProps extends EntityInPlayProps {
+interface QuestProps extends EntityInPlayProps {
 	text: string;
 	title: string;
-	index: number;
 	isTop:boolean;
+	
 }
-
-export default class Secret extends EntityInPlay<SecretProps> {
+export default class Quest extends EntityInPlay<QuestProps> {
 	
 	constructor() {
-		super('secret');
+		super('quest');
 	}
 
 	private getDivClassNames(){
@@ -28,14 +27,10 @@ export default class Secret extends EntityInPlay<SecretProps> {
 	}
 
 	protected jsx() {
-		
+
 		let components = [];
-		//Not-so-elegant way to keep distance between secrets
-		const divStyle = {
-			"margin-left": (this.props.index * 100).toString()+"px"
-		  };
 		
-		components.push(<div key="hover" style={divStyle} className={this.getDivClassNames()}>
+		components.push(<div key="hover" className={this.getDivClassNames()}>
 			<Card
 				entity={this.props.entity}
 				assetDirectory={this.props.assetDirectory}
